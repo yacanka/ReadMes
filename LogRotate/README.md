@@ -17,6 +17,80 @@ Logrotate, Linux tabanlı işletim sistemlerinde, özellikle Ubuntu gibi dağıt
 ```
 > `/path/to/your/logfile` yerine log dosyasının tam adresi yazılmalıdır.
 
+## Kullanım
+Logrotate aracı her şey yolunda gidiyorsa **inactive** durumdadır. Bir ajan gibi arka planda sürekli çalışmaz. Tetiklenmesi gerekir. Logrotate tetikleyicisi, timer ya da cron (zamanlanmış görev) olabilir.
+
+Manuel olarak tetiklemek istiyorsanız bu komutu girin.
+```
+sudo logrotate -f /etc/logrotate.conf
+```
+
+### Timer
+Eğer sistemde Logrotate mevcutsa, logrotate.timer zamanlayıcısı da bulunur. Zamanlayıcıyı kullanabilmek için onun aktif olduğundan emin olmalısınız.
+```
+sudo systemctl status logrotate.timer
+```
+
+Zamanlayıcı aktif ise logrotate zamanlayıcısının çalışma tanımını görmek için bu komutu girin. Bu logrotate.timer için bilgi almamızı sağlayacak.
+```
+sudo systemctl list-timers | grep logrotate
+```
+
+logrotate.timer standart olarak günlük çalışır. Zamanlayıcı özelliklerini değiştirmek için `/lib/systemd/system/logrotate.timer` dosyasına girip kodu değiştirebilirsiniz.
+Örnek olarak, eğer zamanlayıcı belirli bir saatte çalıştırılmak isteniyorsa bu konfigurasyon kullanılabilir.
+```
+[Unit]
+Description=Daily rotation of log files
+Documentation=man:logrotate(8) man:logrotate.conf(5)
+
+[Timer]
+OnCalendar=*-*-* 15:00:00
+AccuracySec=1m
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+```
+> `AccuracySec` zamanlayıcının hassasiyetini belirler. Maksimum duyarlılık için `1us` değeri verilebilir.
+
+Yapılan değişiklerin uygulanması için bu komutları girin.
+```
+sudo systemctl daemon-reload
+sudo systemctl restart logrotate.timer
+```
+
+### Cron
+Cron, Ubuntu ve diğer Linux tabanlı işletim sistemlerinde zaman tabanlı bir görev planlama sistemidir. Logrotate aracını tetiklemek için bu da bir yöntemdir.
+Cron zamanlanmış görevlerini `/etc` dizini altında tutar. İsimleri şu şekildedir:
+- cron.d/
+- cron.daily/
+- cron.hourly/
+- cron.monthly/
+- cron.weekly/
+
+Örnek olarak; logrotate saatlik çalıştırılmak isteniyorsa, `cron.daily` dizini altında logrotate isimli bir dosya oluşturulup aşağıdaki bash kodları yazılabilir.
+```bash
+#!/bin/sh
+
+# skip in favour of systemd timer
+if [ -d /run/systemd/system ]; then
+    exit 0
+fi
+
+# this cronjob persists removals (but not purges)
+if [ ! -x /usr/sbin/logrotate ]; then
+    exit 0
+fi
+
+/usr/sbin/logrotate /etc/logrotate.conf
+EXITVALUE=$?
+if [ $EXITVALUE != 0 ]; then
+    /usr/bin/logger -t logrotate "ALERT exited abnormally with [$EXITVALUE]"
+fi
+exit $EXITVALUE
+```
+
+
 ## Anahtar kelimeler
 Logrotate yapılandırma dosyasına dahil edilebilecek yönergeler hakkında daha fazla bilgiyi burada bulabilirsiniz.
 > Bütün yönergeler dahil edilmemiştir. Sık kullanılacaklar eklenmiştir.
