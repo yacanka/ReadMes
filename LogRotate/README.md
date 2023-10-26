@@ -39,6 +39,9 @@ Günlük dosyaları boyut baytından daha fazla büyüdüklerinde döndürülür
 ### copytruncate
 Eski günlük dosyasını taşımak ve isteğe bağlı olarak yeni bir tane oluşturmak yerine, bir kopya oluşturduktan sonra orijinal günlük dosyasını yerinde keser. Bazı programlara günlük dosyasını kapatması söylenemediğinde ve bu nedenle önceki günlük dosyasına sonsuza kadar yazmaya (eklemeye) devam edebileceği durumlarda kullanılabilir. Dosyanın kopyalanması ve kesilmesi arasında çok küçük bir zaman dilimi olduğunu, bu nedenle bazı günlük verilerinin kaybolabileceğini unutmayın. Bu seçenek kullanıldığında, eski günlük dosyası yerinde kalacağı için create seçeneğinin bir etkisi olmayacaktır.
 
+### rotate
+Günlük dosyaları kaldırılmadan veya bir posta yönergesinde belirtilen adrese postalanmadan önce sayım kez döndürülür. Sayım 0 ise, eski sürümler döndürülmek yerine kaldırılır.
+
 ### mail *address*
 Bir kütük varoluştan döndürüldüğünde, adrese postalanır. Belirli bir kütük tarafından posta üretilmemesi gerekiyorsa nomail yönergesi kullanılabilir.
 
