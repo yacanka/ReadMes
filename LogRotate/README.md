@@ -90,8 +90,49 @@ fi
 exit $EXITVALUE
 ```
 
+## Örnek kullanımlar
+Logrotate konfigurasyonunu yapın.
+```
+nano /etc/logrotate.d/mico
+```
+Bu ayarları ekleyin.
+```
+/opt/mico-client/output.log {
+        size 20M         # rotate if log grows bigger then 20M bytes
+        compress        # old versions of log files are compressed
+        rotate 30        # log files are rotated 30 times before being removed (Max 30 old log file)
+        missingok       # if the log file is missing, go on to the next one without an error message.
+        copytruncate    # the original log file in place after creating a copy, instead of moving the ol>
+}
+```
 
-## Anahtar kelimeler
+> Eğer önce `daily`, `weekly`, `monthly` ve `yearly` yönergelerinden biri; sonra `size` yönergesi gelirse, önceki yönerge göz ardı edilecek ve `size` yönergesi günlük dosyasına uygulanacaktır.
+> Benzer şekilde önce `size` yönergesi, sonra `daily`, `weekly`, `monthly` ve `yearly` yönergeleri kullanıldığında, `size` yönergesi göz ardı edilecektir.
+
+Zamanlayıcıyı ayarlayın.
+```
+nano /lib/systemd/system/logrotate.timer
+```
+Bu ayarları ekleyin.
+```
+[Unit]
+Description=15 min timer rotation of log files
+
+[Timer]
+OnCalendar=*:0/15
+AccuracySec=1m
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+```
+Zamanlayıcıyı yeniden başlatın.
+```
+sudo systemctl daemon-reload
+sudo systemctl restart logrotate.timer
+```
+
+## Yönergeler
 Logrotate yapılandırma dosyasına dahil edilebilecek yönergeler hakkında daha fazla bilgiyi burada bulabilirsiniz.
 > Bütün yönergeler dahil edilmemiştir. Sık kullanılacaklar eklenmiştir.
 
