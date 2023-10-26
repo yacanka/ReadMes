@@ -22,7 +22,7 @@ Logrotate aracı her şey yolunda gidiyorsa **inactive** durumdadır. Bir ajan g
 
 Manuel olarak tetiklemek istiyorsanız bu komutu girin.
 ```
-sudo logrotate -f /etc/logrotate.conf
+sudo logrotate /etc/logrotate.conf
 ```
 
 ### Timer
