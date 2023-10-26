@@ -30,6 +30,9 @@ Günlük dosyaları yalnızca boyut baytından daha fazla büyüdüklerinde dön
 ### compress
 Günlük dosyalarının eski sürümleri varsayılan olarak gzip(1) ile sıkıştırılır. Ayrıca bkz. nocompress.
 
+### delaycompress
+Önceki günlük dosyasının sıkıştırılmasını bir sonraki döndürme döngüsüne erteler. Bu yalnızca compress ile birlikte kullanıldığında etkili olur. Bazı programlara günlük dosyasını kapatması söylenemediğinde ve bu nedenle bir süre daha önceki günlük dosyasına yazmaya devam edebileceği durumlarda kullanılabilir.
+
 ### maxage *count* 
 <count> günden daha eski döndürülmüş günlükleri kaldırın. Yaş yalnızca günlük dosyası döndürülecekse kontrol edilir. maillast ve mail yapılandırılmışsa dosyalar yapılandırılan adrese postalanır. 
 
@@ -39,7 +42,7 @@ Günlük dosyaları boyut baytından daha fazla büyüdüklerinde döndürülür
 ### copytruncate
 Eski günlük dosyasını taşımak ve isteğe bağlı olarak yeni bir tane oluşturmak yerine, bir kopya oluşturduktan sonra orijinal günlük dosyasını yerinde keser. Bazı programlara günlük dosyasını kapatması söylenemediğinde ve bu nedenle önceki günlük dosyasına sonsuza kadar yazmaya (eklemeye) devam edebileceği durumlarda kullanılabilir. Dosyanın kopyalanması ve kesilmesi arasında çok küçük bir zaman dilimi olduğunu, bu nedenle bazı günlük verilerinin kaybolabileceğini unutmayın. Bu seçenek kullanıldığında, eski günlük dosyası yerinde kalacağı için create seçeneğinin bir etkisi olmayacaktır.
 
-### rotate
+### rotate *count*
 Günlük dosyaları kaldırılmadan veya bir posta yönergesinde belirtilen adrese postalanmadan önce sayım kez döndürülür. Sayım 0 ise, eski sürümler döndürülmek yerine kaldırılır.
 
 ### mail *address*
@@ -47,6 +50,9 @@ Bir kütük varoluştan döndürüldüğünde, adrese postalanır. Belirli bir k
 
 ### ifempty
 Notifempty seçeneğini geçersiz kılarak boş olsa bile günlük dosyasını döndürün (ifempty varsayılandır).
+
+### missingok
+Günlük dosyası eksikse, bir hata mesajı vermeden bir sonrakine geçin. Ayrıca bkz. nomissingok.
 
 ### daily
 Günlük dosyaları her gün döndürülür.
