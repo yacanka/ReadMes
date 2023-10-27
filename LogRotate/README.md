@@ -91,13 +91,15 @@ exit $EXITVALUE
 ```
 
 ## Örnek kullanımlar
+
+### Logrotate konfigurasyonu
 Logrotate konfigurasyonunu yapın.
 ```
 nano /etc/logrotate.d/mico
 ```
 Konfigurasyon yönergelerini ekleyin ekleyin.
 
-### Logrotate yönerge örneği 1
+#### Logrotate yönerge örneği 1
 ```
 /opt/mico-client/output.log {
         size 20M         # rotate if log grows bigger then 20M bytes
@@ -113,7 +115,7 @@ Konfigurasyon yönergelerini ekleyin ekleyin.
 - Eğer log dosyası eksikse, hata mesajı olmadan bir sonrakine geçer.
 - Orijinal log dosyası sıfırlanır, bütün içerik yeni bir dosyaya yedeklenir.
 
-### Logrotate yönerge örneği 2
+#### Logrotate yönerge örneği 2
 ```
 /opt/mico-client/output.log {
         daily             # rotate if log grows bigger then 20M bytes
@@ -127,7 +129,7 @@ Konfigurasyon yönergelerini ekleyin ekleyin.
 - En fazla 5 adet log dosyasını rotate eder. Son rotate edilenler en sonki logların silinmesine sebep olur.
 - Log dosyasında hiçbir şey yoksa, rotate etmez.
 
-### Logrotate yönerge örneği 3
+#### Logrotate yönerge örneği 3
 ```
 /opt/mico-client/output.log {
         monthly
@@ -143,24 +145,67 @@ Konfigurasyon yönergelerini ekleyin ekleyin.
 > Önemli: Eğer önce `daily`, `weekly`, `monthly` ve `yearly` yönergelerinden biri; sonra `size` yönergesi gelirse, önceki yönerge göz ardı edilecek ve `size` yönergesi log dosyasına uygulanacaktır.
 > Benzer şekilde önce `size` yönergesi, sonra `daily`, `weekly`, `monthly` ve `yearly` yönergeleri kullanıldığında, `size` yönergesi göz ardı edilecektir.
 
+### Logrotate.time konfigurasyonu
 Zamanlayıcıyı ayarlayın.
 ```
 nano /lib/systemd/system/logrotate.timer
 ```
-Bu ayarları ekleyin.
+Timer ayarlarını ekleyin.
+
+#### Timer örneği 1
 ```
 [Unit]
 Description=15 min timer rotation of log files
 
 [Timer]
 OnCalendar=*:0/15
-AccuracySec=1m
+AccuracySec=2h
 Persistent=true
 
 [Install]
 WantedBy=timers.target
 ```
-Zamanlayıcıyı yeniden başlatın.
+- Zamanlayıcı 15 dakikada bir tetiklenir.
+- 2 saatlik hassasiyet ile çalışır.
+- Zamanlayıcı, kaçırılan çalışma sürelerini yakalayarak sonraki uygun çalışma zamanında çalışır.
+
+#### Timer örneği 2
+```
+[Unit]
+Description=Specific daily timer rotation of log files
+
+[Timer]
+OnCalendar=*-*-* 10:00:00
+AccuracySec=1us
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+```
+- Zamanlayıcı her gün saat 10.00'da tetiklenir.
+- 1 mikrosaniye hassasiyet ile çalışır.
+- Zamanlayıcı, kaçırılan çalışma sürelerini yakalayarak sonraki uygun çalışma zamanında çalışır.
+
+#### Timer örneği 3
+```
+[Unit]
+Description=Daily timer rotation of log files
+
+[Timer]
+OnCalendar=daily
+AccuracySec=12h
+Persistent=false
+
+[Install]
+WantedBy=timers.target
+```
+- Zamanlayıcı her gün saat 00.00'da tetiklenir.
+- 12 saatlik hassasiyet ile çalışır.
+- Zamanlayıcı sistemde beklenen zamanda çalışmazsa, bunu telafi etmeye çalışmaz.
+
+> OnCalendar detayları için: [Systemd timers onCalendar](https://silentlad.com/systemd-timers-oncalendar-(cron)-format-explained)
+
+Değişikliklerin etkinleştirilmesi için zamanlayıcıyı yeniden başlatın.
 ```
 sudo systemctl daemon-reload
 sudo systemctl restart logrotate.timer
