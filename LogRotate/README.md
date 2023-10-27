@@ -95,18 +95,52 @@ Logrotate konfigurasyonunu yapın.
 ```
 nano /etc/logrotate.d/mico
 ```
-Bu ayarları ekleyin.
+Konfigurasyon yönergelerini ekleyin ekleyin.
+
+### Logrotate yönerge örneği 1
 ```
 /opt/mico-client/output.log {
         size 20M         # rotate if log grows bigger then 20M bytes
-        compress        # old versions of log files are compressed
+        compress         # old versions of log files are compressed
         rotate 30        # log files are rotated 30 times before being removed (Max 30 old log file)
-        missingok       # if the log file is missing, go on to the next one without an error message.
-        copytruncate    # the original log file in place after creating a copy, instead of moving the ol>
+        missingok        # if the log file is missing, go on to the next one without an error message.
+        copytruncate     # the original log file in place after creating a copy, instead of moving the ol>
 }
 ```
+- output.log 20 MB boyutuna ulaştığında logu rotate eder.
+- Eski logları sıkıştırır.
+- En fazla 30 adet log dosyasını rotate eder. Son rotate edilenler en sonki logların silinmesine sebep olur.
+- Eğer log dosyası eksikse, hata mesajı olmadan bir sonrakine geçer.
+- Orijinal log dosyası sıfırlanır, bütün içerik yeni bir dosyaya yedeklenir.
 
-> Eğer önce `daily`, `weekly`, `monthly` ve `yearly` yönergelerinden biri; sonra `size` yönergesi gelirse, önceki yönerge göz ardı edilecek ve `size` yönergesi günlük dosyasına uygulanacaktır.
+### Logrotate yönerge örneği 2
+```
+/opt/mico-client/output.log {
+        daily             # rotate if log grows bigger then 20M bytes
+        nocompress        # old versions of log files are not compressed
+        rotate 5          # log files are rotated 5 times before being removed (Max 5 old log file)
+        notifempty        # if there is nothing in the log file, it will not rotate
+}
+```
+- output.log günlük olarak rotate edilir.
+- Eski logları sıkıştırmaz, düz olarak tutulur.
+- En fazla 5 adet log dosyasını rotate eder. Son rotate edilenler en sonki logların silinmesine sebep olur.
+- Log dosyasında hiçbir şey yoksa, rotate etmez.
+
+### Logrotate yönerge örneği 3
+```
+/opt/mico-client/output.log {
+        monthly
+        minsize 2G         # rotate if log grows bigger then 2G bytes
+        rotate 0           # log files are rotated 0 times before being removed (Max 0 old log file)
+}
+```
+- output.log aylık olarak rotate edilir.
+- Log dosyasının rotate edilebilmesi için en az 2 GB boyutu olmalıdır.
+- Eski logları tutmaz, output.log sıfırlanır.
+> minsize yönergesinin size yönergesinden farkı, minsize yönergesi daily, monthly... yönergelerine bağımlıdır. Bu örnekte yeni aya girilmeden, dosya boyutu geçilmiş olsa bile rotate etmez.
+
+> Önemli: Eğer önce `daily`, `weekly`, `monthly` ve `yearly` yönergelerinden biri; sonra `size` yönergesi gelirse, önceki yönerge göz ardı edilecek ve `size` yönergesi log dosyasına uygulanacaktır.
 > Benzer şekilde önce `size` yönergesi, sonra `daily`, `weekly`, `monthly` ve `yearly` yönergeleri kullanıldığında, `size` yönergesi göz ardı edilecektir.
 
 Zamanlayıcıyı ayarlayın.
