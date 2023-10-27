@@ -39,6 +39,9 @@ sudo systemctl list-timers | grep logrotate
 logrotate.timer standart olarak günlük çalışır. Zamanlayıcı özelliklerini değiştirmek için `/lib/systemd/system/logrotate.timer` dosyasına girip kodu değiştirebilirsiniz.
 Örnek olarak, eğer zamanlayıcı belirli bir saatte çalıştırılmak isteniyorsa bu konfigurasyon kullanılabilir.
 ```
+sudo nano /lib/systemd/system/logrotate.timer
+```
+```
 [Unit]
 Description=Daily rotation of log files
 Documentation=man:logrotate(8) man:logrotate.conf(5)
