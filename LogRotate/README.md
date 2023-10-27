@@ -70,8 +70,9 @@ Cron zamanlanmış görevlerini `/etc` dizini altında tutar. İsimleri şu şek
 - cron.hourly/
 - cron.monthly/
 - cron.weekly/
+- crontab
 
-Örnek olarak; logrotate saatlik çalıştırılmak isteniyorsa, `cron.daily` dizini altında logrotate isimli bir dosya oluşturulup aşağıdaki bash kodları yazılabilir.
+Örnek olarak; logrotate haftalık çalıştırılmak isteniyorsa, `cron.weekly` dizini altında logrotate isimli bir dosya oluşturulup aşağıdaki bash script yazılabilir.
 ```bash
 #!/bin/sh
 
