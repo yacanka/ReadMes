@@ -118,7 +118,7 @@ Konfigurasyon yönergelerini ekleyin.
 #### Logrotate yönerge örneği 2
 ```
 /opt/mico-client/output.log {
-        daily             # rotate if log grows bigger then 20M bytes
+        daily             # rotate daily
         nocompress        # old versions of log files are not compressed
         rotate 5          # log files are rotated 5 times before being removed (Max 5 old log file)
         notifempty        # if there is nothing in the log file, it will not rotate
@@ -132,7 +132,7 @@ Konfigurasyon yönergelerini ekleyin.
 #### Logrotate yönerge örneği 3
 ```
 /opt/mico-client/output.log {
-        monthly
+        monthly            # rotate monthly
         minsize 2G         # rotate if log grows bigger then 2G bytes
         rotate 0           # log files are rotated 0 times before being removed (Max 0 old log file)
 }
