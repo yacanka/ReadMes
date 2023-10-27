@@ -122,12 +122,14 @@ Konfigurasyon yönergelerini ekleyin.
         nocompress        # old versions of log files are not compressed
         rotate 5          # log files are rotated 5 times before being removed (Max 5 old log file)
         notifempty        # if there is nothing in the log file, it will not rotate
+        maxage 10         # remove rotated logs older than 10 days.
 }
 ```
 - output.log günlük olarak rotate edilir.
 - Eski logları sıkıştırmaz, aynı formatta tutulur.
 - En fazla 5 adet log dosyasını rotate eder. Son rotate edilenler en sonki logların silinmesine sebep olur.
 - Log dosyasında hiçbir şey yoksa, rotate etmez.
+- Eski loglar 10 gün bekledikten sonra silinir.
 
 #### Logrotate yönerge örneği 3
 ```
