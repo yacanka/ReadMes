@@ -3,7 +3,12 @@
 Logrotate, Linux tabanlı işletim sistemlerinde, özellikle Ubuntu gibi dağıtımlarda kullanılan bir günlük dosyası yönetim aracıdır. Logrotate, sistem günlük dosyalarını düzenli aralıklarla döndürme (rotate), eski günlük dosyalarını sıkıştırma (compress) ve gerektiğinde eski günlük dosyalarını temizleme (delete) işlemlerini otomatik olarak gerçekleştirir. Bu, disk alanını yönetmek, günlük dosyalarını düzenli tutmak ve sistem performansını artırmak için önemli bir araçtır.
 
 ## Konfigurasyon
-Öncelikle, logrotate'ı yapılandıracağınız dosyayı oluşturulmalıdır. Zaten böyle bir dosya varsa düzenlenebilir de. `/etc/logrotate.d` dizini altında bir dosya oluşturalım. `/etc/logrotate.d/myapp` içine aşağıdaki şekilde yazarak konfigurasyon yapmak mümkündür:
+Öncelikle, logrotate aracını yapılandıracağınız dosyayı oluşturmalısınız. Zaten böyle bir dosya varsa onu düzenleyebilirsiniz. Örnek olarak `/etc/logrotate.d` dizini altında myapp isimli bir dosya oluşturalım.
+```
+sudo nano /etc/logrotate.d/myapp
+```
+
+`/etc/logrotate.d/myapp` içine bu şekilde yazarak konfigurasyon yapmak mümkündür.
 ```
 /path/to/your/logfile {
     rotate 7
@@ -19,14 +24,21 @@ Logrotate, Linux tabanlı işletim sistemlerinde, özellikle Ubuntu gibi dağıt
 
 ## Kullanım
 Logrotate aracı her şey yolunda gidiyorsa **inactive** durumdadır. Bir ajan gibi arka planda sürekli çalışmaz. Tetiklenmesi gerekir. Logrotate tetikleyicisi, timer ya da cron (zamanlanmış görev) olabilir.
+```
+sudo systemctl status logrotate
+```
 
-Manuel olarak tetiklemek istiyorsanız bu komutu girin.
+Manuel olarak tetiklemek ve rotate etmek istiyorsanız bu komutu girin.
 ```
 sudo logrotate /etc/logrotate.conf
 ```
+Konfigurayondaki şartlar sağlanmasa bile zorla rotate etmek için bu komutu girin.
+```
+sudo logrotate -f /etc/logrotate.conf
+```
 
 ### Timer
-Eğer sistemde Logrotate mevcutsa, logrotate.timer zamanlayıcısı da bulunur. Zamanlayıcıyı kullanabilmek için onun aktif olduğundan emin olmalısınız.
+Eğer sistemde logrotate mevcutsa, logrotate.timer zamanlayıcısı da bulunur. Zamanlayıcıyı kullanabilmek için onun aktif olduğundan emin olmalısınız.
 ```
 sudo systemctl status logrotate.timer
 ```
