@@ -97,7 +97,7 @@ Logrotate konfigurasyonunu yapın.
 ```
 nano /etc/logrotate.d/mico
 ```
-Konfigurasyon yönergelerini ekleyin ekleyin.
+Konfigurasyon yönergelerini ekleyin.
 
 #### Logrotate yönerge örneği 1
 ```
@@ -125,7 +125,7 @@ Konfigurasyon yönergelerini ekleyin ekleyin.
 }
 ```
 - output.log günlük olarak rotate edilir.
-- Eski logları sıkıştırmaz, düz olarak tutulur.
+- Eski logları sıkıştırmaz, aynı formatta tutulur.
 - En fazla 5 adet log dosyasını rotate eder. Son rotate edilenler en sonki logların silinmesine sebep olur.
 - Log dosyasında hiçbir şey yoksa, rotate etmez.
 
@@ -145,7 +145,7 @@ Konfigurasyon yönergelerini ekleyin ekleyin.
 > Önemli: Eğer önce `daily`, `weekly`, `monthly` ve `yearly` yönergelerinden biri; sonra `size` yönergesi gelirse, önceki yönerge göz ardı edilecek ve `size` yönergesi log dosyasına uygulanacaktır.
 > Benzer şekilde önce `size` yönergesi, sonra `daily`, `weekly`, `monthly` ve `yearly` yönergeleri kullanıldığında, `size` yönergesi göz ardı edilecektir.
 
-### Logrotate.time konfigurasyonu
+### Logrotate.timer konfigurasyonu
 Zamanlayıcıyı ayarlayın.
 ```
 nano /lib/systemd/system/logrotate.timer
