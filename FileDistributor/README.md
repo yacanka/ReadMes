@@ -111,7 +111,7 @@ MINIO_SECRET_ACCESS_KEY="123456789"
 MINIO_BUCKET="distributor"
 ```
 Database bilgilerini aşağıdaki bilgiler doğrultusunda isteğinize göre güncelleyin.
-- `DB_DRIVER` postgres olmalıdır.
+- `DB_DRIVER` değeri, postgres olmalıdır.
 - File distributor, veritabanı ile aynı makinedeyse `DB_HOST` localhost olarak kalmalıdır.
 - `DB_NAME` değeri veritabanında oluşturulmuş bir isim olmalıdır. Oluşturmak için:
 ```
@@ -128,9 +128,14 @@ sudo -u postgres psql -U postgres -d postgres -c "alter user \"distributor\" wit
 sudo -u postgres createuser distributor
 ```
 
-.env dosyası ile ilgili işlemleri tamamladıktan sonra minio config dosyası çalıştırılmalıdır.
+.env dosyası ile ilgili işlemler tamamlandıktan sonra minio config dosyasını çalıştırın.
 ```
 /opt/file-distributor/minio-config/minio-config.sh
+```
+
+Yapılan değişiklerin uygulanması için file distributor servisini yeniden başlatın.
+```
+sudo systemctl restart file-distributor
 ```
 
 
